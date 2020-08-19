@@ -1,3 +1,4 @@
+/*
 package ru.otus.akutsev.books.daotests;
 
 import org.junit.jupiter.api.AfterEach;
@@ -103,3 +104,4 @@ public class BookDaoTest {
 		prepareData.clearData(mongoOperations);
 	}
 }
+*/

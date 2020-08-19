@@ -3,24 +3,22 @@ package ru.otus.akutsev.books.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import ru.otus.akutsev.books.dao.BookDao;
 import ru.otus.akutsev.books.model.Book;
-import ru.otus.akutsev.books.service.BookService;
-
-import java.util.List;
 
 @RestController
 public class BooksRestController {
 
-	private final BookService bookService;
+	private final BookDao bookDao;
 
 	@Autowired
-	public BooksRestController(BookService bookService) {
-		this.bookService = bookService;
+	public BooksRestController(BookDao bookDao) {
+		this.bookDao = bookDao;
 	}
 
 	@GetMapping("/api/books")
-	public List<Book> getAllBooks() {
-		List<Book> books = bookService.getAll();
-		return books;
+	public Flux<Book> getAllBooks() {
+		return bookDao.findAll();
 	}
 }

@@ -1,19 +1,18 @@
 package ru.otus.akutsev.books.dao;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.akutsev.books.model.Book;
 
-import java.util.List;
-import java.util.Optional;
-
 @Repository
-public interface BookDao extends MongoRepository<Book, Long> {
-	Book save(Book book);
+public interface BookDao extends ReactiveMongoRepository<Book, Long> {
+	Mono<Book> save(Mono<Book> book);
 
-	Optional<Book> findAById(String id);
+	Mono<Book> findAById(String id);
 
-	List<Book> findAll();
+	Flux<Book> findAll();
 
-	void deleteById(String id);
+	Mono<Void> deleteById(String id);
 }

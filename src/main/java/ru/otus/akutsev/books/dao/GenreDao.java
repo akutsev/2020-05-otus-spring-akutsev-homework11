@@ -1,16 +1,15 @@
 package ru.otus.akutsev.books.dao;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 import ru.otus.akutsev.books.model.Genre;
 
-import java.util.Optional;
-
 @Repository
-public interface GenreDao extends MongoRepository<Genre, String> {
-	Genre save(Genre genre);
+public interface GenreDao extends ReactiveMongoRepository<Genre, String> {
+	Mono<Genre> save(Mono<Genre> genre);
 
-	Optional<Genre> findById(String id);
+	Mono<Genre> findById(String id);
 
-	void deleteById(String id);
+	Mono<Void> deleteById(String id);
 }

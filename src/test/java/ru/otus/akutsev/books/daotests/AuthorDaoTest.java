@@ -1,3 +1,4 @@
+/*
 package ru.otus.akutsev.books.daotests;
 
 import org.junit.jupiter.api.DisplayName;
@@ -53,3 +54,4 @@ public class AuthorDaoTest {
 	}
 
 }
+*/

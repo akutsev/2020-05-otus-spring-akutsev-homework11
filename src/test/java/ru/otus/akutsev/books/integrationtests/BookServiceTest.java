@@ -1,4 +1,4 @@
-package ru.otus.akutsev.books.integrationtests;
+/*package ru.otus.akutsev.books.integrationtests;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -89,4 +89,4 @@ public class BookServiceTest {
 	private void clearData() {
 		prepareData.clearData(mongoOperations);
 	}
-}
+}*/
