@@ -8,6 +8,8 @@ import ru.otus.akutsev.books.model.Book;
 
 @Repository
 public interface BookDao extends ReactiveMongoRepository<Book, Long> {
+	Mono<Book> save(Book book);
+
 	Mono<Book> save(Mono<Book> book);
 
 	Mono<Book> findAById(String id);

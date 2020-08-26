@@ -37,6 +37,13 @@ public class Book {
 		this.comments = new ArrayList<>();
 	}
 
+	public Book(String name, Author author, Genre genre) {
+		this.name = name;
+		this.author = author;
+		this.genre = genre;
+		this.comments = new ArrayList<>();
+	}
+
 	public Book() {
 	}
 

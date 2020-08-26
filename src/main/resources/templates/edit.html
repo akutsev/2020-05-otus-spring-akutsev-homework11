@@ -5,16 +5,16 @@
     <title>Правка книги</title>
 </head>
 <body>
-    <form id="edit-book" th:action="@{/edit(id=${book.id})}" th:method="post" th:object = "${book}" action="edit.html">
+    <form id="edit-book" th:action="@{/edit(id=${book.id})}" th:method="post" th:object = "${book}" action="edit">
 
         <div class="row">
             <label for="name-input">Name:</label>
-            <input id="name-input" name="name" th:value="${book.name}" value="Название книги">
+            <input id="name-input" name="bookName" th:value="${book.name}" value="Название книги">
         </div>
 
         <div class="row">
             <label for="author-select">Author:</label>
-            <select id="author-select" name="author">
+            <select id="author-select" name="authorId">
                 <option th:each="author : ${authors}" th:value = "${author.id}" th:text = "${author.name}"
                         th:selected = "${author.name == book.author.name}">Автор книги</option>
             </select>
@@ -22,7 +22,7 @@
 
         <div class="row">
             <label for="genre-select">Genre:</label>
-            <select id="genre-select" name="genre">
+            <select id="genre-select" name="genreId">
                 <option th:each="genre : ${genres}" th:value = "${genre.id}" th:text = "${genre.genreName}"
                         th:selected = "${genre.genreName == book.genre.genreName}">Жанр книги</option>
             </select>

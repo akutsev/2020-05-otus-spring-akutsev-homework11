@@ -1,17 +1,12 @@
 package ru.otus.akutsev.books.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.server.ServerRequest;
-import org.springframework.web.reactive.function.server.ServerResponse;
-import org.springframework.web.reactive.result.view.RedirectView;
-import org.springframework.web.server.ServerWebExchange;
-import org.thymeleaf.spring5.context.webflux.IReactiveDataDriverContextVariable;
-import org.thymeleaf.spring5.context.webflux.ReactiveDataDriverContextVariable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.akutsev.books.dao.AuthorDao;
@@ -20,9 +15,7 @@ import ru.otus.akutsev.books.dao.GenreDao;
 import ru.otus.akutsev.books.model.Author;
 import ru.otus.akutsev.books.model.Book;
 import ru.otus.akutsev.books.model.Genre;
-
-import java.util.Map;
-import java.util.Objects;
+import ru.otus.akutsev.books.model.dto.BookDto;
 
 @Controller
 public class BooksPagesController {
@@ -50,9 +43,7 @@ public class BooksPagesController {
 
 //		IReactiveDataDriverContextVariable reactiveAuthors =
 //				new ReactiveDataDriverContextVariable(authorDao.findAll(), 5);
-//		IReactiveDataDriverContextVariable reactiveGenres =
-//				new ReactiveDataDriverContextVariable(genreDao.findAll(), 5);
-//
+
     	model.addAttribute("authors", authors);
 		model.addAttribute("genres", genres);
 
@@ -70,29 +61,50 @@ public class BooksPagesController {
 		return "edit";
 	}
 
-	@PostMapping("/edit")
-	public String saveEditedBook(@ModelAttribute(name = "book") Mono<Book> book) {
-		bookDao.save(book);
+	@PostMapping("/save")
+	public Mono<String> saveNewBook(@ModelAttribute BookDto bookDto) {
+		Mono<Author> newAuthorMono = authorDao.findById(bookDto.getAuthorId());
+		Mono<Genre> newGenreMono = genreDao.findById(bookDto.getGenreId());
 
-		return "redirect:/";
+		Book book = new Book();
+
+		Mono<Book> newBookMono = Mono.zip(newAuthorMono, newGenreMono)
+				.flatMap(data -> {
+					book.setAuthor(data.getT1());
+					book.setGenre(data.getT2());
+					book.setName(bookDto.getBookName());
+					return Mono.just(book);
+				});
+
+		newBookMono.flatMap(bookDao::save).subscribe();
+
+		return Mono.just("redirect:/");
+	}
+
+	@PostMapping("/edit")
+	public Mono<String> saveEditedBook(@ModelAttribute BookDto bookDto, @RequestParam("id") String id) {
+		Mono<Author> newAuthorMono = authorDao.findById(bookDto.getAuthorId());
+		Mono<Genre> newGenreMono = genreDao.findById(bookDto.getGenreId());
+		Mono<Book> oldBookMono = bookDao.findAById(id).switchIfEmpty(Mono.error(new NoSuchBookException()));
+
+		Mono<Book> newBookMono = Mono.zip(oldBookMono, newAuthorMono, newGenreMono)
+				.flatMap(data -> {
+					data.getT1().setAuthor(data.getT2());
+					data.getT1().setGenre(data.getT3());
+					data.getT1().setName(bookDto.getBookName());
+					return Mono.just(data.getT1());
+				});
+
+		newBookMono.flatMap(bookDao::save).subscribe();
+
+		return Mono.just("redirect:/");
 	}
 
 	@PostMapping("/delete")
-	public String deleteBook(String id) {
-		bookDao.deleteById(id).then();
+	public Mono<String> deleteBook(@RequestParam("id") String id) {
+		bookDao.deleteById(id).subscribe();
 
-		return "redirect:/";
+		return Mono.just("redirect:/");
 	}
-
-	@PostMapping("/save")
-	public Mono<String> saveStudent(@ModelAttribute(name = "book") Mono<Book> book) {
-		return bookDao.save(book).then(Mono.just("redirect:/"));
-	}
-
-/*	public String  saveNewBook(@ModelAttribute(name = "book") Book book) {
-		bookDao.save(book);
-
-		return "redirect:/";
-	}*/
 
 }

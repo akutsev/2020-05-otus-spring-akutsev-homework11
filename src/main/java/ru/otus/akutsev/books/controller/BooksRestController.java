@@ -17,8 +17,9 @@ public class BooksRestController {
 		this.bookDao = bookDao;
 	}
 
-	@GetMapping("/api/books")
+	@GetMapping("/api/allBooks")
 	public Flux<Book> getAllBooks() {
 		return bookDao.findAll();
 	}
+
 }
