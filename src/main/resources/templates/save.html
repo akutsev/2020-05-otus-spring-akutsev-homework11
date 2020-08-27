@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Новая книга</title>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <form id="save-book" method="post" action="/save" th:object = "${book}">
+
+        <div class="row">
+            <label for="name-input">Name:</label>
+            <input id="name-input" name="bookName" value="Название книги">
+        </div>
+
+        <div class="row">
+            <label for="author-select">Author:</label>
+            <select id="author-select" name="authorId"  th:object = "${author}">
+                <option th:each="author : ${authors}" th:value = "${author.id}" th:text = "${author.name}">Автор книги</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <label for="genre-select">Genre:</label>
+            <select id="genre-select" name="genreId" th:object = "${genre}">
+                <option th:each="genre : ${genres}" th:value = "${genre.id}" th:text = "${genre.genreName}">Жанр книги</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <button id="savebutton" type="submit">Сохранить</button>
+        </div>
+
+    </form>
+    <script>
+        $(document).ready(function () {
+            var name = $("#name-input").val();
+            var author = $("#author-select").val();
+            var genre = $("#genre-select").val();
+
+            $($savebutton).click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/api/savebook",
+                    dataType: JSON,
+                    data: {
+                        "name": name,
+                        "author": author,
+                        "genre": genre
+                    },
+                    success: function (data) {
+                        alert("success");
+                    }
+                    error: function (e) {
+                        alert("error" + e)
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
