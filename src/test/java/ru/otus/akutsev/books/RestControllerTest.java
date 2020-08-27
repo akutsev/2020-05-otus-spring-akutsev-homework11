@@ -1,4 +1,4 @@
-package ru.otus.akutsev.books.controllertests;
+package ru.otus.akutsev.books;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +29,7 @@ public class RestControllerTest {
 	@MockBean
 	private BookDao bookDao;
 
+	@DisplayName("вывод всех книг")
 	@Test
 	public void showAllBooksTest() {
 		Book book1 = new Book("Idiot", new Author("1", "Fedor Dostoevskiy"), new Genre("2", "Drama"));

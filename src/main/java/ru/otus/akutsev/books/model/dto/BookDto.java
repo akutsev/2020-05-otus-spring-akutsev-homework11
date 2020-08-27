@@ -2,18 +2,16 @@ package ru.otus.akutsev.books.model.dto;
 
 public class BookDto {
 
-	private String bookId;
 	private String bookName;
 	private String authorId;
 	private String genreId;
 
-	public String getBookId() {
-		return bookId;
+	public BookDto(String bookName, String authorId, String genreId) {
+		this.bookName = bookName;
+		this.authorId = authorId;
+		this.genreId = genreId;
 	}
 
-	public void setBookId(String bookId) {
-		this.bookId = bookId;
-	}
 	public String getBookName() {
 		return bookName;
 	}

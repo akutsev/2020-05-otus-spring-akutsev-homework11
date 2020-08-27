@@ -52,7 +52,7 @@ public class BooksPagesController {
 
 	@GetMapping("/edit")
 	public String editPage(@RequestParam("id") String id, Model model) {
-		Mono<Book> book = bookDao.findAById(id).onErrorResume(e -> Mono.error(new NoSuchBookException()));
+		Mono<Book> book = bookDao.findById(id).onErrorResume(e -> Mono.error(new NoSuchBookException()));
 
 		model.addAttribute("book", book);
 		model.addAttribute("authors", authorDao.findAll());
@@ -85,7 +85,7 @@ public class BooksPagesController {
 	public Mono<String> saveEditedBook(@ModelAttribute BookDto bookDto, @RequestParam("id") String id) {
 		Mono<Author> newAuthorMono = authorDao.findById(bookDto.getAuthorId());
 		Mono<Genre> newGenreMono = genreDao.findById(bookDto.getGenreId());
-		Mono<Book> oldBookMono = bookDao.findAById(id).switchIfEmpty(Mono.error(new NoSuchBookException()));
+		Mono<Book> oldBookMono = bookDao.findById(id).switchIfEmpty(Mono.error(new NoSuchBookException()));
 
 		Mono<Book> newBookMono = Mono.zip(oldBookMono, newAuthorMono, newGenreMono)
 				.flatMap(data -> {
